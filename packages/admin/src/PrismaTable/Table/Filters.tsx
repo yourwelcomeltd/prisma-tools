@@ -6,10 +6,9 @@ import { useFilter } from './useFilter';
 import { useEnum, useModel } from '../useSchema';
 import { AdminSchemaField, AdminSchemaModel } from '../../types';
 import { TableContext } from '../Context';
-import { SearchCircleIcon, TrashIcon } from '@heroicons/react/solid';
+import { MagnifyingGlassCircleIcon, TrashIcon } from '@heroicons/react/24/solid';
 import { buttonClasses, classNames, inputClasses } from '../../components/css';
 import { randString } from './utils';
-import { getDate } from '../Form/getDate';
 
 interface Option {
   id: any;
@@ -161,7 +160,7 @@ const DefaultFilter: React.FC<FilterComponentsProps> = ({ filterValue, setFilter
     return (
       <div className="flex items-center">
         <span>{name}</span>{' '}
-        {filterValue && filterValue[name] && <SearchCircleIcon className="h-5 w-5 text-green-500" />}
+        {filterValue && filterValue[name] && <MagnifyingGlassCircleIcon className="h-5 w-5 text-green-500" />}
       </div>
     );
   };
@@ -183,7 +182,10 @@ const DefaultFilter: React.FC<FilterComponentsProps> = ({ filterValue, setFilter
 
   const inputProps =
     field.type === 'DateTime'
-      ? { type: 'datetime-local', defaultValue: value[option.id] ? getDate(new Date(value[option.id])) : undefined }
+      ? {
+          type: 'datetime-local',
+          defaultValue: value[option.id] ? new Date(value[option.id]).toISOString().slice(0, 16) : undefined,
+        }
       : { type: 'text', value: value[option.id] || '' };
 
   return (
@@ -260,7 +262,7 @@ const ObjectFilter: React.FC<FilterComponentsProps> = ({ field, filterValue, set
       name: (
         <div className="flex items-center">
           <span className="truncate">{item.title}</span>{' '}
-          {filter[item.name] && <SearchCircleIcon className="h-5 w-5 text-green-500" />}
+          {filter[item.name] && <MagnifyingGlassCircleIcon className="h-5 w-5 text-green-500" />}
         </div>
       ),
     }));
@@ -280,6 +282,7 @@ const ObjectFilter: React.FC<FilterComponentsProps> = ({ field, filterValue, set
           if (value) {
             newValue[getField.name] = value;
           } else {
+            // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
             delete newValue[getField.name];
           }
           setFilter(

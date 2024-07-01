@@ -1,7 +1,7 @@
 /* eslint @typescript-eslint/no-non-null-assertion: 0 */
 import React, { useContext, useState } from 'react';
 import { useQuery } from '@apollo/client';
-import { SearchIcon, XCircleIcon } from '@heroicons/react/outline';
+import { MagnifyingGlassIcon, XCircleIcon } from '@heroicons/react/24/outline';
 
 import Modal from '../../components/Modal';
 import { useEnum } from '../useSchema';
@@ -13,8 +13,8 @@ import { FormInputs, ModelTableProps } from '../../types';
 import Select from '../../components/Select';
 import Checkbox from '../../components/Checkbox';
 import { buttonClasses, classNames, inputClasses } from '../../components/css';
-import { getDate } from './getDate';
 import { AdminSchemaField } from '@paljs/types';
+import { useController, useFormContext } from 'react-hook-form';
 
 interface Option {
   id: any;
@@ -27,7 +27,7 @@ const getFieldValidation = (field: AdminSchemaField, inputValidation: ModelTable
 };
 
 const defaultInputs: Omit<FormInputs, 'Upload' | 'Editor'> = {
-  Default({ field, error, register, disabled, value }) {
+  Default({ field, disabled, value }) {
     const { lang, inputValidation } = useContext(TableContext);
     const options: any = {
       disabled,
@@ -35,8 +35,8 @@ const defaultInputs: Omit<FormInputs, 'Upload' | 'Editor'> = {
         ? field.type === 'Json'
           ? JSON.stringify(value)
           : field.list
-          ? value.join(',')
-          : value
+            ? value.join(',')
+            : value
         : value,
     };
     if (field.list) {
@@ -57,34 +57,41 @@ const defaultInputs: Omit<FormInputs, 'Upload' | 'Editor'> = {
           break;
       }
     }
+    const { register, getFieldState } = useFormContext();
+    const { error } = getFieldState(field.name);
     return (
       <div className="flex flex-wrap w-full sm:w-1/2 pr-2 pt-2">
         <div className="w-full text-gray-600">
           {field.title}
-          {error && <span className="text-red-700 text-xs">{error.message ? error.message : lang.isRequired}</span>}
+          {error && (
+            <span className="text-red-700 text-xs">
+              {typeof error.message === 'string' ? error.message : lang.isRequired}
+            </span>
+          )}
         </div>
         <input
           className={classNames('w-full', inputClasses, error ? 'border-red-400' : '')}
-          {...register(field.name, {
-            required: field.required,
-            ...getFieldValidation(field, inputValidation),
-          })}
+          defaultValue={value}
+          {...register(field.name, { required: field.required, ...getFieldValidation(field, inputValidation) })}
           {...options}
         />
       </div>
     );
   },
-  Enum({ field, value, error, register, setValue, disabled }) {
+  Enum({ field, value, disabled }) {
     const [state, setState] = useState(value);
     const enumType = useEnum(field.type);
     const { lang, dir, inputValidation } = useContext(TableContext);
-
-    React.useEffect(() => {
-      register(field.name, {
-        required: field.required,
-        ...getFieldValidation(field, inputValidation),
-      });
-    }, [register]);
+    const { control } = useFormContext();
+    const {
+      field: inputField,
+      fieldState: { error },
+    } = useController({
+      name: field.name,
+      control,
+      defaultValue: value,
+      rules: { required: field.required, ...getFieldValidation(field, inputValidation) },
+    });
 
     const options: Option[] = field.required ? [] : [{ id: null, name: lang.all }];
     if (enumType) {
@@ -103,10 +110,7 @@ const defaultInputs: Omit<FormInputs, 'Upload' | 'Editor'> = {
           value={options.find((option) => option.id === state)}
           onChange={(option: Option) => {
             setState(option.id);
-            setValue(field.name, option.id, {
-              shouldValidate: !!option.id,
-              shouldDirty: true,
-            });
+            inputField.onChange(option.id);
           }}
           options={options}
         />
@@ -114,7 +118,7 @@ const defaultInputs: Omit<FormInputs, 'Upload' | 'Editor'> = {
     );
   },
 
-  Object({ field, value, error, register, setValue, disabled }) {
+  Object({ field, value, disabled }) {
     const {
       schema: { models },
       lang,
@@ -134,9 +138,16 @@ const defaultInputs: Omit<FormInputs, 'Upload' | 'Editor'> = {
 
     const result = data ? data[`findUnique${field.type}`] : {};
 
-    React.useEffect(() => {
-      register(field.name, { required: field.required });
-    }, [register]);
+    const { control } = useFormContext();
+    const {
+      field: inputField,
+      fieldState: { error },
+    } = useController({
+      name: field.name,
+      control,
+      defaultValue: value,
+      rules: { required: field.required },
+    });
 
     return (
       <div className="flex flex-wrap w-full sm:w-1/2 pr-2 pt-2">
@@ -147,10 +158,7 @@ const defaultInputs: Omit<FormInputs, 'Upload' | 'Editor'> = {
             connect={Object.keys(state).length > 0 ? result : {}}
             onConnect={(_value) => {
               setSate(_value);
-              setValue(field.name, _value[model.idField], {
-                shouldValidate: true,
-                shouldDirty: true,
-              });
+              inputField.onChange(_value[model.idField]);
               setModal(!modal);
             }}
           />
@@ -169,7 +177,7 @@ const defaultInputs: Omit<FormInputs, 'Upload' | 'Editor'> = {
             )}
             onClick={() => setModal(!modal)}
           >
-            <SearchIcon className="h-5 w-5" />
+            <MagnifyingGlassIcon className="h-5 w-5" />
           </button>
           <input className={classNames(inputClasses, 'mx-2 flex-1')} value={getDisplayName(state, model)} disabled />
           {!field.required && (
@@ -182,10 +190,7 @@ const defaultInputs: Omit<FormInputs, 'Upload' | 'Editor'> = {
               )}
               onClick={() => {
                 setSate({});
-                setValue(field.name, null, {
-                  shouldValidate: !field.required,
-                  shouldDirty: true,
-                });
+                inputField.onChange(null);
               }}
             >
               <XCircleIcon className="h-5 w-5" />
@@ -195,39 +200,48 @@ const defaultInputs: Omit<FormInputs, 'Upload' | 'Editor'> = {
       </div>
     );
   },
-  Date({ field, value, error, register, disabled }) {
+  Date({ field, value, disabled }) {
     const { lang, inputValidation } = useContext(TableContext);
+    const { register, getFieldState } = useFormContext();
+    const { error } = getFieldState(field.name);
     return (
-      <div className="flex flex-wrap w-full sm:w-1/2 pr-2 pt-2">
+      <div className="flex w-full flex-wrap pr-2 pt-2 sm:w-1/2">
         <div className="w-full text-gray-600">
           {field.title}
-          {error && <span className="text-red-700 text-xs">{error.message ? error.message : lang.isRequired}</span>}
+          {error && (
+            <span className="text-xs text-red-700">
+              {typeof error.message === 'string' ? error.message : lang.isRequired}
+            </span>
+          )}
         </div>
         <input
           className={classNames('w-full', inputClasses, error ? 'border-red-400' : '')}
           type="datetime-local"
           disabled={disabled}
-          defaultValue={value ? getDate(new Date(value)) : undefined}
+          defaultValue={value ? new Date(value).toISOString().slice(0, 16) : ''}
           {...register(field.name, {
             required: field.required,
             valueAsDate: true,
-            ...getFieldValidation(field, inputValidation),
+            ...(getFieldValidation(field, inputValidation) as any),
           })}
         />
       </div>
     );
   },
-  Boolean({ field, value, register, setValue, disabled }) {
+  Boolean({ field, value, disabled }) {
     const [state, setState] = useState(value);
 
+    const { control } = useFormContext();
+    const { field: inputField } = useController({
+      name: field.name,
+      control,
+      defaultValue: value,
+    });
+
     const onChangeHandler = (value: boolean) => {
-      setValue(field.name, value, { shouldValidate: true, shouldDirty: true });
+      inputField.onChange(value);
       setState(value);
     };
-
-    React.useEffect(() => {
-      register(field.name);
-    }, [register]);
 
     return (
       <div className="flex flex-wrap w-full sm:w-1/2 pr-2 pt-2">
