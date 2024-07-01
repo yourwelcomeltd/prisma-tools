@@ -51,7 +51,7 @@ export class GenerateTypes {
       return 'Client.Prisma.BatchPayload';
     }
     if (this.isModel(name)) {
-      return name;
+      return `Client.${name}`;
     }
     if (name.startsWith('CreateMany') && name.endsWith('AndReturnOutputType')) {
       const innerType = name.replace(/^CreateMany|AndReturnOutputType$/g, '');
