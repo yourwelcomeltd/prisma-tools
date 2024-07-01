@@ -207,7 +207,7 @@ export type Mutation = { [key: string]: Resolver<any, any, any> } & {
   createManyUserAndReturn?: Resolver<
     {},
     CreateManyUserAndReturnArgs,
-    Client.Prisma.CreateManyUserAndReturnOutputType[]
+    ReturnType<Client.Prisma.UserDelegate['createManyAndReturn']>
   >
   deleteOneUser?: Resolver<{}, DeleteOneUserArgs, Client.User | null>
   updateOneUser?: Resolver<{}, UpdateOneUserArgs, Client.User | null>
@@ -219,7 +219,7 @@ export type Mutation = { [key: string]: Resolver<any, any, any> } & {
   createManyPostAndReturn?: Resolver<
     {},
     CreateManyPostAndReturnArgs,
-    Client.Prisma.CreateManyPostAndReturnOutputType[]
+    ReturnType<Client.Prisma.PostDelegate['createManyAndReturn']>
   >
   deleteOnePost?: Resolver<{}, DeleteOnePostArgs, Client.Post | null>
   updateOnePost?: Resolver<{}, UpdateOnePostArgs, Client.Post | null>

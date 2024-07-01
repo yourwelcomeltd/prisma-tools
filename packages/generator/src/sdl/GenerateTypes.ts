@@ -74,6 +74,10 @@ export class GenerateTypes {
             options.type
           }Args>`;
         }
+        if (options.type.startsWith('CreateMany') && options.type.endsWith('AndReturnOutputType')) {
+          const innerType = options.type.replace(/^CreateMany|AndReturnOutputType$/g, '');
+          return `ReturnType<Client.Prisma.${innerType}Delegate["createManyAndReturn"]>`;
+        }
         const type =
           options.type.toString() === 'AffectedRowsOutput'
             ? 'Prisma.BatchPayload'
