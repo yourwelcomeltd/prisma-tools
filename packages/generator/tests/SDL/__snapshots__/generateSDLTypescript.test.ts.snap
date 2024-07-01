@@ -54,48 +54,56 @@ export type Resolvers = {
 }
 
 export type User = { [key: string]: Resolver<any, any, any> } & {
-  id?: Resolver<Client.User, {}, number>
-  createdAt?: Resolver<Client.User, {}, Date>
-  email?: Resolver<Client.User, {}, string>
-  name?: Resolver<Client.User, {}, string | null>
-  password?: Resolver<Client.User, {}, string>
-  permissions?: Resolver<Client.User, {}, any>
-  posts?: Resolver<Client.User, UserPostsArgs, Client.Post[] | null>
-  _count?: Resolver<Client.User, {}, Client.Prisma.UserCountOutputType>
+  id?: Resolver<User, {}, number>
+  createdAt?: Resolver<User, {}, Date>
+  email?: Resolver<User, {}, string>
+  name?: Resolver<User, {}, string | null>
+  password?: Resolver<User, {}, string>
+  permissions?: Resolver<User, {}, any>
+  posts?: Resolver<User, UserPostsArgs, Client.Post[] | null>
+  _count?: Resolver<User, {}, Client.Prisma.UserCountOutputType>
 }
 
 export type Post = { [key: string]: Resolver<any, any, any> } & {
-  id?: Resolver<Client.Post, {}, number>
-  published?: Resolver<Client.Post, {}, boolean>
-  title?: Resolver<Client.Post, {}, string>
-  authorId?: Resolver<Client.Post, {}, number | null>
-  createdAt?: Resolver<Client.Post, {}, Date>
-  updatedAt?: Resolver<Client.Post, {}, Date>
-  author?: Resolver<Client.Post, PostAuthorArgs, Client.User | null>
+  id?: Resolver<Post, {}, number>
+  published?: Resolver<Post, {}, boolean>
+  title?: Resolver<Post, {}, string>
+  authorId?: Resolver<Post, {}, number | null>
+  createdAt?: Resolver<Post, {}, Date>
+  updatedAt?: Resolver<Post, {}, Date>
+  author?: Resolver<Post, PostAuthorArgs, Client.User | null>
 }
 
 export type CreateManyUserAndReturnOutputType = {
   [key: string]: Resolver<any, any, any>
 } & {
-  id?: Resolver<Client.Prisma.CreateManyUserAndReturnOutputType, {}, number>
+  id?: Resolver<
+    ReturnType<Client.Prisma.UserDelegate['createManyAndReturn']>,
+    {},
+    number
+  >
   createdAt?: Resolver<
-    Client.Prisma.CreateManyUserAndReturnOutputType,
+    ReturnType<Client.Prisma.UserDelegate['createManyAndReturn']>,
     {},
     Date
   >
-  email?: Resolver<Client.Prisma.CreateManyUserAndReturnOutputType, {}, string>
+  email?: Resolver<
+    ReturnType<Client.Prisma.UserDelegate['createManyAndReturn']>,
+    {},
+    string
+  >
   name?: Resolver<
-    Client.Prisma.CreateManyUserAndReturnOutputType,
+    ReturnType<Client.Prisma.UserDelegate['createManyAndReturn']>,
     {},
     string | null
   >
   password?: Resolver<
-    Client.Prisma.CreateManyUserAndReturnOutputType,
+    ReturnType<Client.Prisma.UserDelegate['createManyAndReturn']>,
     {},
     string
   >
   permissions?: Resolver<
-    Client.Prisma.CreateManyUserAndReturnOutputType,
+    ReturnType<Client.Prisma.UserDelegate['createManyAndReturn']>,
     {},
     any
   >
@@ -104,30 +112,38 @@ export type CreateManyUserAndReturnOutputType = {
 export type CreateManyPostAndReturnOutputType = {
   [key: string]: Resolver<any, any, any>
 } & {
-  id?: Resolver<Client.Prisma.CreateManyPostAndReturnOutputType, {}, number>
+  id?: Resolver<
+    ReturnType<Client.Prisma.PostDelegate['createManyAndReturn']>,
+    {},
+    number
+  >
   published?: Resolver<
-    Client.Prisma.CreateManyPostAndReturnOutputType,
+    ReturnType<Client.Prisma.PostDelegate['createManyAndReturn']>,
     {},
     boolean
   >
-  title?: Resolver<Client.Prisma.CreateManyPostAndReturnOutputType, {}, string>
+  title?: Resolver<
+    ReturnType<Client.Prisma.PostDelegate['createManyAndReturn']>,
+    {},
+    string
+  >
   authorId?: Resolver<
-    Client.Prisma.CreateManyPostAndReturnOutputType,
+    ReturnType<Client.Prisma.PostDelegate['createManyAndReturn']>,
     {},
     number | null
   >
   createdAt?: Resolver<
-    Client.Prisma.CreateManyPostAndReturnOutputType,
+    ReturnType<Client.Prisma.PostDelegate['createManyAndReturn']>,
     {},
     Date
   >
   updatedAt?: Resolver<
-    Client.Prisma.CreateManyPostAndReturnOutputType,
+    ReturnType<Client.Prisma.PostDelegate['createManyAndReturn']>,
     {},
     Date
   >
   author?: Resolver<
-    Client.Prisma.CreateManyPostAndReturnOutputType,
+    ReturnType<Client.Prisma.PostDelegate['createManyAndReturn']>,
     CreateManyPostAndReturnOutputTypeAuthorArgs,
     Client.User | null
   >
