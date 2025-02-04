@@ -1,5 +1,31 @@
 # @paljs/display
 
+## 8.1.0
+
+### Minor Changes
+
+- update prisma version
+
+## 8.0.1
+
+### Patch Changes
+
+- fix(admin): fix bug in admin disconntect
+
+## 8.0.0
+
+### Major Changes
+
+- Update the prisma version to 6 that have breaking changes
+
+## 7.1.0
+
+### Minor Changes
+
+- Upgrade Prisma dependencies and update test snapshots
+
+  Updated Prisma-related dependencies from version 5.16.0 to 5.22.0. This change also includes updates to test snapshots to reflect recent modifications in model indexes and field defaults. The dependency react-hook-form is now specified with a flexible version range.
+
 ## 7.0.2
 
 ### Patch Changes

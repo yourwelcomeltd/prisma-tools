@@ -1,6 +1,6 @@
 {
   "name": "@paljs/display",
-  "version": "7.0.2",
+  "version": "8.1.0",
   "description": "Display package for the paljs CLI",
   "homepage": "https://paljs.com",
   "license": "MIT",
@@ -35,6 +35,6 @@
     "@types/debug": "^4.1.7",
     "@types/node": "20.12.12",
     "rimraf": "^3.0.2",
-    "typescript": "^5.4.5"
+    "typescript": "^5.7.2"
   }
 }

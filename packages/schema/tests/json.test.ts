@@ -3,8 +3,13 @@ import { join } from 'path';
 
 test('generate Json object from prisma schema', () => {
   const generate = new ConvertSchemaToObject(join(__dirname, './schemas/schema.prisma')).run();
+
   expect(generate).toMatchInlineSnapshot(`
     {
+      "dataSource": {
+        "provider": "postgresql",
+        "url": "env("DATABASE_URL")",
+      },
       "enums": [
         {
           "fields": [
@@ -14,11 +19,22 @@ test('generate Json object from prisma schema', () => {
           "name": "Role",
         },
       ],
+      "generators": [
+        {
+          "name": "client",
+          "provider": "prisma-client-js",
+        },
+        {
+          "name": "pothos",
+          "provider": "prisma-pothos-types",
+        },
+      ],
       "models": [
         {
           "documentation": "// User modal documentation",
           "fields": [
             {
+              "defaultValue": "autoincrement()",
               "documentation": "",
               "isId": true,
               "kind": "scalar",
@@ -31,6 +47,7 @@ test('generate Json object from prisma schema', () => {
               "unique": false,
             },
             {
+              "defaultValue": "now()",
               "documentation": "",
               "isId": false,
               "kind": "scalar",
@@ -43,6 +60,7 @@ test('generate Json object from prisma schema', () => {
               "unique": false,
             },
             {
+              "defaultValue": undefined,
               "documentation": "",
               "isId": false,
               "kind": "scalar",
@@ -55,6 +73,7 @@ test('generate Json object from prisma schema', () => {
               "unique": true,
             },
             {
+              "defaultValue": undefined,
               "documentation": "",
               "isId": false,
               "kind": "scalar",
@@ -67,6 +86,7 @@ test('generate Json object from prisma schema', () => {
               "unique": false,
             },
             {
+              "defaultValue": undefined,
               "documentation": "// password documentation
     // password second line documentation",
               "isId": false,
@@ -80,6 +100,7 @@ test('generate Json object from prisma schema', () => {
               "unique": false,
             },
             {
+              "defaultValue": ""{}"",
               "documentation": "",
               "isId": false,
               "kind": "scalar",
@@ -92,6 +113,7 @@ test('generate Json object from prisma schema', () => {
               "unique": false,
             },
             {
+              "defaultValue": undefined,
               "documentation": "",
               "isId": false,
               "kind": "object",
@@ -110,6 +132,7 @@ test('generate Json object from prisma schema', () => {
           "documentation": "",
           "fields": [
             {
+              "defaultValue": "autoincrement()",
               "documentation": "",
               "isId": true,
               "kind": "scalar",
@@ -122,6 +145,7 @@ test('generate Json object from prisma schema', () => {
               "unique": false,
             },
             {
+              "defaultValue": "false",
               "documentation": "",
               "isId": false,
               "kind": "scalar",
@@ -134,6 +158,7 @@ test('generate Json object from prisma schema', () => {
               "unique": false,
             },
             {
+              "defaultValue": undefined,
               "documentation": "",
               "isId": false,
               "kind": "scalar",
@@ -146,6 +171,7 @@ test('generate Json object from prisma schema', () => {
               "unique": false,
             },
             {
+              "defaultValue": undefined,
               "documentation": "",
               "isId": false,
               "kind": "object",
@@ -165,6 +191,7 @@ test('generate Json object from prisma schema', () => {
               "unique": false,
             },
             {
+              "defaultValue": undefined,
               "documentation": "",
               "isId": false,
               "kind": "scalar",
@@ -177,6 +204,7 @@ test('generate Json object from prisma schema', () => {
               "unique": false,
             },
             {
+              "defaultValue": "now()",
               "documentation": "",
               "isId": false,
               "kind": "scalar",
@@ -189,6 +217,7 @@ test('generate Json object from prisma schema', () => {
               "unique": false,
             },
             {
+              "defaultValue": undefined,
               "documentation": "",
               "isId": false,
               "kind": "scalar",
